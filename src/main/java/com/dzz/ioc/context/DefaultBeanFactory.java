@@ -2,6 +2,7 @@ package com.dzz.ioc.context;
 
 
 import com.dzz.ioc.BeanFactory;
+import com.dzz.ioc.scanner.ClasspathPackageScanner;
 import com.dzz.ioc.scanner.PackageScanner;
 
 import java.util.Map;
@@ -21,6 +22,10 @@ public class DefaultBeanFactory implements BeanFactory {
     private static Map<String, Object> beanNameMap = new ConcurrentHashMap<>();
 
     private PackageScanner packageScanner;
+
+    public DefaultBeanFactory() {
+        this.packageScanner = new ClasspathPackageScanner();
+    }
 
     @Override
     public Object getBeanByName(String name) {

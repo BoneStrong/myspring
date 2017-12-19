@@ -23,8 +23,19 @@ public class StringUtils {
         return fileUrl.substring(5, pos);
     }
 
+    public static String basePackageHandle(String basePackage) {
+        if (basePackage == null || basePackage.trim().length() == 0 || "/".equals(basePackage)) {
+            return "";
+        }
+        if (basePackage.startsWith("/") && basePackage.length() > 1) {
+            return basePackage.substring(1);
+        }
+        return basePackage;
+    }
+
     /**
      * "cn.fh.lightning" -> "cn/fh/lightning"
+     *
      * @param name
      * @return
      */

@@ -20,7 +20,7 @@ public class StringUtilsTest {
 
     @Test
     public void dotToSplash() throws Exception {
-        Set<String> fullyQualifiedClassNameSet = new ClasspathPackageScanner("com").getFullyQualifiedClassNameSet();
+        Set<String> fullyQualifiedClassNameSet = new ClasspathPackageScanner("/").getFullyQualifiedClassNameSet();
         System.out.println(fullyQualifiedClassNameSet);
 
     }

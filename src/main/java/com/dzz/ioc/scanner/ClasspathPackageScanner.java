@@ -32,6 +32,11 @@ public class ClasspathPackageScanner implements PackageScanner {
 
     private Set<String> fullyQualifiedClassNameSet = new HashSet<>();
 
+    public ClasspathPackageScanner() {
+        this.basePackage = null;
+        this.cl = getClass().getClassLoader();
+    }
+
     public ClasspathPackageScanner(String basePackage) {
         this.basePackage = basePackage;
         this.cl = getClass().getClassLoader();
@@ -49,18 +54,9 @@ public class ClasspathPackageScanner implements PackageScanner {
      * @throws IOException
      */
     private Set<String> doScan(String basePackage, Set<String> nameSet) throws IOException {
+        basePackage = StringUtils.basePackageHandle(basePackage);
         String splashPath = StringUtils.dotToSplash(basePackage);
-        URL url = cl.getResource(splashPath);
-        if (url == null) {
-            if (basePackage.startsWith(".") || basePackage.startsWith("/")) {
-                if (basePackage.length() > 1) {
-                    basePackage = basePackage.substring(1);
-                } else {
-                    basePackage = "";
-                }
-            }
-            url = new URL("file:" + cl.getResource("").getPath() + basePackage);
-        }
+        URL url = new URL(cl.getResource("") + splashPath);
         String filePath = StringUtils.getRootPath(url);
         List<String> names = null;
         if (isJarFile(filePath)) {
@@ -68,14 +64,16 @@ public class ClasspathPackageScanner implements PackageScanner {
         } else {
             names = readFromDirectory(filePath);
         }
-        for (String name : names) {
-            if (isClassFile(name)) {
-                nameSet.add(toFullyQualifiedName(name, basePackage));
-            } else {
-                if (basePackage.endsWith("/")) {
-                    doScan(basePackage + name, nameSet);
+        if (names != null) {
+            for (String name : names) {
+                if (isClassFile(name)) {
+                    nameSet.add(toFullyQualifiedName(name, basePackage));
                 } else {
-                    doScan(basePackage + "." + name, nameSet);
+                    if (basePackage.length() == 0) {
+                        doScan(basePackage + name, nameSet);
+                    } else {
+                        doScan(basePackage + "." + name, nameSet);
+                    }
                 }
             }
         }
