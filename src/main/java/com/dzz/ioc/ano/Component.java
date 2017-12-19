@@ -6,6 +6,7 @@ import java.lang.annotation.*;
  * @author zoufeng
  * @since 2017/12/18
  */
+@Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

@@ -1,9 +1,12 @@
 package com.dzz.ioc.pojo;
 
+import com.dzz.ioc.ano.Component;
+
 /**
  * @author zoufeng
  * @since 2017/12/18
  */
+@Component
 public class People {
 
     private String userName;
@@ -26,5 +29,9 @@ public class People {
     public People setAge(int age) {
         this.age = age;
         return this;
+    }
+
+    public void introduceSelf(){
+        System.out.println("hello ,i am you baba");
     }
 }

@@ -37,6 +37,11 @@ public class ClasspathPackageScanner implements PackageScanner {
         this.cl = getClass().getClassLoader();
     }
 
+    public ClasspathPackageScanner(ClassLoader cl) {
+        this.basePackage = null;
+        this.cl = cl;
+    }
+
     public ClasspathPackageScanner(String basePackage) {
         this.basePackage = basePackage;
         this.cl = getClass().getClassLoader();

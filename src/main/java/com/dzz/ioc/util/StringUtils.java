@@ -67,4 +67,57 @@ public class StringUtils {
 
         return trimmed.substring(splashIndex);
     }
+
+    /**
+     * 首字母大 小写
+     *
+     * @param str
+     * @param up
+     * @return
+     */
+    public static String getStringFristCharUp(String str, boolean up) {
+        int len = (str == null ? 0 : str.length());
+        if (len <= 0) {
+            return str;
+        }
+        boolean bufferChanged = false;
+        StringBuffer tmpSb = new StringBuffer();
+        tmpSb.delete(0, tmpSb.length());
+        tmpSb.append(str);
+        char curCh = str.charAt(0);
+        if (curCh >= 'a' && curCh <= 'z') {
+            if (up) {
+                curCh = (char) (curCh - 'a' + 'A');
+            }
+            tmpSb.setCharAt(0, curCh);
+            bufferChanged = true;
+        }
+        if (curCh >= 'A' && curCh <= 'Z') {
+            if (!up) {
+                curCh = (char) (curCh - 'A' + 'a');
+            }
+            tmpSb.setCharAt(0, curCh);
+            bufferChanged = true;
+        }
+
+        for (int i = 1; i < len; i++) {
+            curCh = str.charAt(i);
+            tmpSb.setCharAt(i, curCh);
+            bufferChanged = true;
+        }
+        return (bufferChanged ? tmpSb.toString() : str);
+    }
+
+    /**
+     * com.dzz.People --> people
+     *
+     * @param fullName
+     * @return
+     */
+    public static String classFullNameToBeanName(String fullName) {
+        if (fullName == null) {
+            throw new NullPointerException();
+        }
+        return getStringFristCharUp(fullName.substring(fullName.lastIndexOf(".") + 1), false);
+    }
 }
