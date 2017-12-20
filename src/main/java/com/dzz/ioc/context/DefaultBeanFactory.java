@@ -26,9 +26,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * 解析bean的几个问题
  * 单例管理 factoryBean
  * 别名管理
- * 依赖注入（循环依赖问题） ：状态记录集合，factoryBean 作为中间代理提供bean
+ * 依赖注入（循环依赖问题） ：状态记录集合，FactoryBean 作为中间代理提供bean
  * <p>
  * 使用线程上下文加载器来加载类文件
+ *
+ *
+ * 一些混淆的概念问题：
+ * spring 管理的bean有factory-bean 和 factory-method 这两个属性，
+ * 本质其实是生成一个ObjectFatory对象，然后通过静态工厂方式创建bean对象
+ * 【这个和FactoryBean 没有关系】
+ *
+ *
  */
 public class DefaultBeanFactory implements BeanFactory {
 
