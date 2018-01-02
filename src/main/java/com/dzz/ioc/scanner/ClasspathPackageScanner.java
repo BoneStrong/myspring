@@ -53,6 +53,8 @@ public class ClasspathPackageScanner implements PackageScanner {
     }
 
     /**
+     * 获取路径下的类全限定名 set集合
+     *
      * @param basePackage
      * @param nameSet
      * @return

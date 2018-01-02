@@ -60,6 +60,11 @@ public class DefaultBeanFactory implements BeanFactory {
     private static Map<String, Object> earlySingletonObjects = new ConcurrentHashMap<>(64);
 
 
+    /**
+     * 自定义beanDefinition 池
+     *
+     *
+     */
     private static Map<String, Object> beanNameMap = new ConcurrentHashMap<>(64);
 
     private static Map<String, Class> beanNameClassMap = new ConcurrentHashMap<>(64);
@@ -77,6 +82,7 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     private void initMethod() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        //获取bean字节码文件，定义beanDefinition
         loaderBeanClass();
         createNoParamBean();
         beanDiHandle();

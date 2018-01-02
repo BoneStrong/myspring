@@ -23,6 +23,14 @@ public class StringUtils {
         return fileUrl.substring(5, pos);
     }
 
+    /**
+     * "/" ---> ""
+     * null ==> ""
+     * "/fageg" ---> "fageg"
+     *
+     * @param basePackage
+     * @return
+     */
     public static String basePackageHandle(String basePackage) {
         if (basePackage == null || basePackage.trim().length() == 0 || "/".equals(basePackage)) {
             return "";
