@@ -3,12 +3,15 @@ package com.dzz.ioc.context;
 
 import com.dzz.ioc.BeanFactory;
 import com.dzz.ioc.ano.Component;
+import com.dzz.ioc.definition.BeanDefinition;
+import com.dzz.ioc.processor.BeanPostProcessor;
 import com.dzz.ioc.scanner.ClasspathPackageScanner;
 import com.dzz.ioc.scanner.PackageScanner;
 import com.dzz.ioc.util.AnoUtils;
 import com.dzz.ioc.util.StringUtils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,6 +36,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * 【这个和FactoryBean 没有关系】
  * <p>
  * look-up属性 ： 为abstract或interface 生成一个代理类，注入实现了指定方法的子类
+ * <p>
+ * <p>
+ * spring 的MethodOverride处理 其实只是处理lookup-Metod和replace-Method这两个属性
+ * <p>
+ * 默认按类型注入
  */
 public class DefaultBeanFactory implements BeanFactory {
     /**
@@ -61,15 +69,18 @@ public class DefaultBeanFactory implements BeanFactory {
 
 
     /**
-     * 自定义beanDefinition 池
-     *
-     *
+     * beanFactory初始化时扫描所有的beanPostProcessor
      */
-    private static Map<String, Object> beanNameMap = new ConcurrentHashMap<>(64);
+    private List<BeanPostProcessor> beanPostProcessors;
+    /**
+     * 自定义beanDefinition 池 这里只放入非interface,enum的类文件  beanName --> BeanDefinition
+     */
+    private static Map<String, BeanDefinition> beanDefinitions = new ConcurrentHashMap<>(64);
 
-    private static Map<String, Class> beanNameClassMap = new ConcurrentHashMap<>(64);
-
-    private static Map<String, Object> beanStateMap = new ConcurrentHashMap<>(64);
+    /**
+     * 创建中的beanMap  beanName --> Bean
+     */
+    private static Map<String, Object> currentCreateBeans = new ConcurrentHashMap<>(64);
 
     private static ClassLoader classLoader;
 
@@ -84,46 +95,41 @@ public class DefaultBeanFactory implements BeanFactory {
     private void initMethod() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         //获取bean字节码文件，定义beanDefinition
         loaderBeanClass();
-        createNoParamBean();
-        beanDiHandle();
+
     }
 
     private void loaderBeanClass() throws IOException, ClassNotFoundException {
         Set<String> fullyQualifiedClassNameSet = packageScanner.getFullyQualifiedClassNameSet();
         for (String s : fullyQualifiedClassNameSet) {
             Class<?> clazz = classLoader.loadClass(s);
-            if (clazz.isAnnotation() || clazz.isInterface()) {
+            //枚举，注解，接口不加载
+            if (clazz.isAnnotation() || clazz.isInterface()||clazz.isEnum()) {
                 continue;
             }
             if (AnoUtils.isContainAno(clazz, Component.class)) {
                 String beanName = StringUtils.classFullNameToBeanName(s);
-                //loader Class
-                beanNameClassMap.put(beanName, clazz);
+                //loader Class and  create BeanDefinition
+
             }
         }
     }
 
-    private void createNoParamBean() throws IllegalAccessException, InstantiationException {
-        for (Map.Entry<String, Class> entry : beanNameClassMap.entrySet()) {
-            Object o = entry.getValue().newInstance();
-            System.out.println(o);
-            //di handle  and to resolve circle
-            beanNameMap.put(entry.getKey(), o);
-        }
-    }
 
-    private void beanDiHandle() {
+
+
+
+    private void populateBean() {
 
     }
 
     @Override
-    public Object getBeanByName(String name) {
-        return beanNameMap.get(name);
+    public Object getBean(String name) {
+        return null;
     }
 
     @Override
-    public <T extends Object> T getBeanByName(String name, Class<T> clazz) {
-        Object o = beanNameMap.get(name);
+    public <T extends Object> T getBean(String name, Class<T> clazz) {
+       /* Object o = beanNameMap.get(name);
         if (o == null) {
             throw new NullPointerException();
         }
@@ -132,8 +138,8 @@ public class DefaultBeanFactory implements BeanFactory {
             t = (T) o;
         } catch (Exception e) {
             throw new ClassCastException(String.format(" %s can not cast of %s", o.getClass().getName(), clazz.getName()));
-        }
-        return t;
+        }*/
+        return null;
     }
 
 }

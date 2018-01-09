@@ -11,7 +11,7 @@ public interface BeanFactory {
      * @param name
      * @return
      */
-    Object getBeanByName(String name);
+    Object getBean(String name);
 
     /**
      * getBean
@@ -20,5 +20,5 @@ public interface BeanFactory {
      * @param <T>
      * @return
      */
-    <T> T getBeanByName(String name, Class<T> clazz);
+    <T> T getBean(String name, Class<T> clazz);
 }
